@@ -74,8 +74,8 @@ WHERE
 (+나중에 JOIN을 배우면 더 잘 이해가 될 것 같음)
 
 👉 쿼리 엔진 실행 순서 vs. 쿼리 실제 입력 순서 
-- FROM → WHERE→ SELECT : 쿼리 엔진이 데이터셋을 처리할 때 실행되는 순서로, 기억해놓고 인지적으로 흐름 따라가기
-- SELECT→ FROM→ WHERE :  쿼리 구문을 입력할 때 작성해야 하는 순서로, 'SELECT→ WHERE→  FROM'처럼 작성하는 실수↑(※주의※) 
+- FROM → WHERE → SELECT : 쿼리 엔진이 데이터셋을 처리할 때 실행되는 순서로, 기억해놓고 인지적으로 흐름 따라가기
+- SELECT → FROM → WHERE :  쿼리 구문을 입력할 때 작성해야 하는 순서로, 'SELECT→ WHERE→  FROM'처럼 작성하는 실수↑(※주의※) 
 ~~~
 ```
 👉 SQR 학습 팁 
@@ -195,7 +195,20 @@ FROM pokemon;
 
 
 ~~~
-여기에 답을 작성해주세요!
+📌오류 위치 및 이유 
+(1) 쿼리문이 SELECT→ FROM → WHERE 순서여야 하는데 , 해당 쿼리문에서는 WHERE → FROM으로 순서가 바뀌어 있음. 
+(2) AS 뒤에 따옴표('')가 들어가면 오류가 뜰 수 있음. 
+(3) 세미콜론(;)은 해당 쿼리문을 끝내겠다는 의미인데, ID와 'Electric' 뒤에도 각각 와서 SELECT, FROM, WEHRE 절이 서로 연결되지 않음.
+(4) FROM 뒤에 <데이터셋>.<테이블>이 와야 하는데, <테이블>만 표시되어 있음(?-이건 오류가 될 수 없을까?)
+
+📌올바른 쿼리문 
+SELECT 
+  name AS 포켓몬_이름, 
+  ID
+FROM <Dataset_name>.pokemon
+WHERE 
+  type = 'Electric'; 
+
 ~~~
 
 
@@ -214,7 +227,16 @@ GROUP BY type;
 
 
 ~~~
-여기에 답을 작성해주세요.
+📌오류 이유 
+AVG(attack)은 집계 결과이므로 WHERE 절에 사용할 수 없음 → HAVING을 사용해야 함. 
+
+📌올바른 쿼리문
+SELECT 
+  type, 
+  AVG(attack) AS avg_attack
+FROM <Dataset_name>.pokemon
+GROUP BY type
+HAVING avg_attack >= 60;
 ~~~
 
 
