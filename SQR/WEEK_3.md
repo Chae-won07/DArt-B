@@ -61,7 +61,102 @@
 * 연습문제(7문제 이상) 푼 것들 정리하기
 ~~~
 
-<!-- 새롭게 배운 내용을 자유롭게 정리해주세요.-->
+~~~
+1. 포켓몬 중에 type2가 없는 포켓몬의 수를 작성하는 퀘리를 작성해주세요.
+* 항상 조건, 테이블, 컬럼, 집계 등을 따지며 쿼리문을 작성해야 함 
+* IS NULL : NULL은 =가 아니라 IS를 사용해야 함 
+* WHERE 절에서 여러 조건을 연결하려면 AND를 사용 
+* () OR ()으로 형식으로 사용해야 함 
+
+👉 쿼리문(1)
+SELECT
+  COUNT(id) AS cnt
+FROM basic.pokemon
+WHERE type2 IS (NOT) NULL
+
+
+2. type2가 없는 포켓몬의 type1과 type1의 포켓몬수를 알려주는 쿼리를 작성해주세요.
+단,type1의 포켓몬수가 큰 순으로 정렬해주세요.
+* 집계 함수는 항상 GROUPBY와 함께 다님. 집계하는 기준(컬럼)이 없으면 COUNT만 사용할 수 있으나, 집계하는 기준이 있다면 그 기준 컬럼을 GROUP BU에 써줘야 함.
+
+👉 쿼리문(2)
+SELECT
+  type1,
+  COUNT(id) AS pokemon_cnt
+FROM basic.pokemon
+WHERE 
+  type2 IS NULL
+GROUP BY
+  type1
+ORDER BY
+  pokemon_cnt DESC
+
+
+3. type2 상관없이 type1의 포켓몬수를 알 수 있는 쿼리를 작성해주세요.
+* 'type2 상관없이'는 조건은 아님.
+* DISTINCT = 고유한 값만 보고 싶을 때 (DAU - daily active user)
+* 어떤 컬럼은 중복이 있게 설계되곤 함 → DISTINCT도 같이 걸어서 보기! 
+
+👉 쿼리문(3)
+SELECT
+  type1,
+  COUNT(id) AS pokemon_cnt
+FROM basic.pokemon
+GROUP BY
+  type1
+
+
+4. 전설 여부에 따른 포켓몬 수를 알 수 있는 쿼리를 작성해주세요.
+* 컬럼 이름 앞부분 입력 후 기다리면 자동완성+엔터
+* GROUP BY 1 → SELECT의 첫 번째 컬럼 
+* ORDER BY에도 1, 2... 사용할 수 있음 
+
+👉 쿼리문(4)
+SELECT
+  is_legendary,
+  COUNT(id) AS pokemon_cnt
+FROM basic.pokemon
+GROUP BY 
+  is_legendary
+
+
+5. 동명이인이 있는 이름은무엇일까요?(한번에 찾으려고 하지않고 단계적으로 가도 괜찮아요)
+* Having : GROUP BY와 함께 집계 결과에 조건을 설정하고 싶은 경우 
+* WHERE : 원본 FROM절에 조건을 설정하고 싶은 경우
+
+👉 쿼리문(5)
+SELECT
+  name
+  COUNT(name) AS trainer_cnt
+FROM basic.trainer
+GROUP BY
+  name
+HAVING 
+  trainer_cnt >= 2
+
+
+6. trainer 테이블에서 “Iris”트레이너의 정보를 알 수 있는 쿼리를 작성해주세요.
+
+👉 쿼리문(6)
+SELECT
+  *
+FROM basic.trainer
+WHERE 
+  name = "Iris"
+  
+
+7.trainer테이블에서 “Iris”, ”Whitney”, “Cynthia”트레이너의 정보를 알 수 있는 쿼리를 작성해주세요.
+* IN : OR 조건 많이 사용해야 할 때 쓸 수 있음 
+
+👉 쿼리문(7)
+SELECT 
+  *
+FROM basic.trainer
+WHERE
+  (name = "Iris") 
+  OR (name = “Cynthia”)
+  OR (name =  ”Whitney”)
+~~~
 
 
 
@@ -72,8 +167,16 @@
 * SQL 쿼리 구조를 이해할 수 있다. 
 * SELECT, FROM, WHERE을 활용하는 방법을 설명할 수 있다. 
 ~~~
-
-<!-- 새롭게 배운 내용을 자유롭게 정리해주세요.-->
+~~~
+* SELECT 
+  컬럼명
+  FROM 테이블명
+  WHERE 조건;
+* SELECT : 어떤 데이터를 가져올지 지정
+* FROM : 데이터를 가져올 테이블 지정
+* WHERE : 조건을 걸어 필요한 데이터만 가져오기
+* GRUOP BY ALL 등장!
+~~~
 
 
 
@@ -84,7 +187,16 @@
 * 쿼리를 작성하는 흐름을 설명할 수 있다.
 ~~~
 
-<!-- 새롭게 배운 내용을 자유롭게 정리해주세요.-->
+~~~
+* 지표 고민(어떤 문제를 해결하기 위해 데이터가 필요한가?)
+* 지표 구체화(추상적이지 않고 구체적인 지표 명시 - 분자, 분모 표시)
+* 지표 탐색(유사한 문제를 해결한 케이스가 있나 확인)---(해당 쿼리 리뷰)
+* 유사한 문제를 해결한 케이스가 없다면 쿼리를 작성하는 것 
+* 데이터가 있는 테이블 찾기(1개, 2개 이상 - 연결 방법 고민)
+* 데이터 정합성(예상한 결과와 동일한지 확인)
+* 쿼리 가독성(나중을 위해 깔끔하게 쿼리 작성)
+* 쿼리는 재사용되므로 문서로 저장
+~~~
 
 
 
@@ -143,7 +255,17 @@ ORDER BY (ㄱ) (ㄷ);
 
 
 ~~~
-여기에 답을 작성해주세요!
+(ㄱ) → COUNT(*)
+
+(ㄴ) → GROUP BY
+
+(ㄷ) → DESC
+
+👉 쿼리문 
+SELECT type1, COUNT(*)
+FROM pokemon
+GROUP BY type1
+ORDER BY COUNT(*) DESC;
 ~~~
 
 
