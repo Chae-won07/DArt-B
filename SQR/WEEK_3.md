@@ -219,7 +219,7 @@ WHERE
 # 2️⃣ 학습 인증란
 
 
-![alt text](image-1.png)
+![alt text](image.png)
 
 <br><br>
 
