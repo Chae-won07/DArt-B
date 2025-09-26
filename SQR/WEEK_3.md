@@ -219,7 +219,7 @@ WHERE
 # 2️⃣ 학습 인증란
 
 
-![alt text](image.png)
+![!\[alt text\](image.png) ](images/SQR_WEEK3.png)
 
 <br><br>
 
