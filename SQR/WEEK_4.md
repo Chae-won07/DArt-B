@@ -309,7 +309,7 @@ FROM (
 ![!\[alt text\](image.png)](images/SQR_WEEK4(문제풀이).png)
 
 (+)학습 인증
-![alt text](image.png)
+![!\[alt text\](image.png)](images/SQR_WEEK4.png)
 
 
 
