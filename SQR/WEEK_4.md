@@ -181,7 +181,7 @@ SELECT
 
 👉 날짜 및 시간 데이터 타입 파악(DATE, DATETIME, TIMESTAMP)
 - DATE : 시간 없이 연도와 날짜만 표시하는 데이터(2023-12-31)
-- DATETIME : 시간까지 표시하는 데이터(2023-12-31 14:00:00)  ← Time Zone 정보 無
+- DATETIME : 시간까지 표시하는 데이터(2023-12-31 14:00:00)  ← Time Zone 정보 無(타임존 정보를 포함하여 변환한 이후의 데이터이기 때문)
 - TIME : 날짜와 무관하게 시간만 표시하는 데이터(23:59:59.00)
 - TIMESTAMP : UTC부터 경과한 시간을 나타내는 값(2023-12-31 14:00:00 UTC) ← Time Zone 정보 有
 
@@ -208,6 +208,80 @@ SELECT
 ~~~
   - TIMESTAP : 타임존이 UTC라고 나오고, 한국 시간 -9시간
   - DATETIME : 타임존이 가운데에 T로 나오고, 한국 Zone 사용시 한국 시간과 동일 
+  
+👉 DATETIME 함수
+
+-① **<a>CURRENT_DATETIME</a>**([time zone]) : 현재 DATETIME 출력 (※Time Zone을 입력해야 살펴보려고 하는 지역의 시간 정보를 정확하게 파악할 수 있음 ※) 
+
+-② **<a>EXTRACT</a>** : DATETIME에서 특정 부분만 추출하고 싶은 경우 (part에는 대부분의 시간 단위가 들어갈 수 있음) 
+~~~
+EXTRACT(part FROM datetime_expression)
+~~~
+
+>EXTRACT(<a>DATE</a> FROM DATETIME "2025-09-27 14:00:00") AS date, → **2025-09-27**
+
+>EXTRACT(<a>YEAR</a> FROM DATETIME "2025-09-27 14:00:00") AS year, → **2025**
+
+>EXTRACT(<a>MONTH</a> FROM DATETIME "2025-09-27 14:00:00") AS month, → **9**
+
+>EXTRACT(<a>DAY</a> FROM DATETIME "2025-09-27 14:00:00") AS day, → **27**
+
+>EXTRACT(<a>HOUR</a> FROM DATETIME "2025-09-27 14:00:00") AS hour, → **14**
+
+>EXTRACT(<a>MINUTE</a> FROM DATETIME "2025-09-27 14:00:00") AS minute, → **0** 
+
+
+-③ EXTRACT(**<a>DAYOFWEEK</a>** FROM datetime_col) : 요일을 추출하고 싶은 경우 
+
+-➃ **<a>DATETIME_TRUNC</A>**(datetime_expression, date_time_part) : date_time_part만 남기고 싶은 경우 (hour_trunc를 많이 사용함)
+
+>DATETIME "2024-03-02 14:42:13" AS original data, → **2024-03-02T14:42:1**
+
+>DATETIME_TRUNC(DATETIME "2024-03-02 14:42:13", <a>DAY</a>) AS day_trunc,  → **2024-<a>03-02</a>T00:00:00**
+
+>DATETIME_TRUNC(DATETIME "2024-03-02 14:42:13", <a>YEAR</a>) AS year_trunc,  → **<a>2024</a>-01-01T00:00:00**
+
+> DATETIME_TRUNC(DATETIME "2024-03-02 14:42:13", <a>MONTH</a>) AS month_trunc, → **2024-<a>03</a>-01T00:00:00**
+
+> DATETIME_TRUNC(DATETIME "2024-03-02 14:42:13", <a>HOUR</a>) AS hour_trunc; → **2024-03-02T<a>14</a>:00:00**
+
+-⑤ **<a>PARSE_DATETIME</a>**('문자열의 형태', 'DATETIME 문자열' AS datetime : 문자열로 저장된 DATETIME을 DATETIME 타입으로 바꾸고 싶은 경우 
+~~~
+SELECT
+  PARSE_DATETIME('%Y-%m-%d-%H:%M:%S', '2024-01-11 12:35:35') AS parse_datetime; 
+
+  → %는 어떤 것이 어떤 시간의 단위인지 알려주는 약속 문자(Format Elements 문서를 확인) 
+~~~
+
+-⑥ **<a>FORMAT_DATETIME</a>** : DATETIME 타입 데이터를 특정 형태의 문자열 데이터로 변환하고 싶은 경우(↔PARSE)
+~~~
+SELECT
+  FROMAT_DATETIME("%c", DATETIME "2024-01-11 12:35:35") AS formatted; 
+~~~
+
+-⑦ **<a>LAST_DAY</a>** : 자동으로 월의 마지막 값을 계산해서 특정 연산을 할 경우(월의 마지막 값을 반환) 
+~~~
+SELECT
+  LAST_DAY(DATETIME '2024-01-03 15:30:00') AS last_day, → 2024-01-31
+  LAST_DAY(DATETIME '2024-01-03 15:30:00', MONTH) AS last_day_month, → 2024-01-31
+  LAST_DAY(DATETIME '2024-01-03 15:30:00', WEEK) AS last_day_week, → 2024-01-06(일요일 기준으로 마지막 날짜 = 토요일)
+  LAST_DAY(DATETIME '2024-01-03 15:30:00', WEEK(SUNDAY)) AS last_day_week_sun, → 2024-01-06
+  LAST_DAY(DATETIME '2024-01-03 15:30:00', WEEK(MONDAY)) AS last_day,week_mon → 2024-01-07
+~~~
+
+-⑧ **<a>DATETIME_DIFF</a>**(첫 DATETIME, 두번째 DATETIME, 궁금한 차이) : 두 DATETIME의 차이를 알고 싶은 경우 
+~~~
+SELECT 
+  DATETIME_DIFF(first_datetime, second_datetime, DAY) AS day_diff1, → 1187
+  DATETIME_DIFF(second_datetime, first_datetime, DAY) AS day_diff2, → -1187
+  DATETIME_DIFF(first_datetime, second_datetime, MONTH) AS month_diff, → 39
+  DATETIME_DIFF(first_datetime, second_datetime, WEEK) AS week_diff, → 170
+FROM (
+  SELECT 
+  DATETIME "2024-04-02 10:20:00" AS first_datetime, 
+  DATETIME "2021-01-01 15:30:00" AS second_datetime,
+ )
+~~~
 
 
 
@@ -232,7 +306,7 @@ SELECT
 
 <!-- 문제를 풀기 위하여 로그인이  필요합니다. -->
 
-<!-- 정답을 맞추게 되면, 정답입니다. 라는 칸이 생성되는데 이 부분을 캡처해서 이 주석을 지우시고 첨부해주시면 됩니다. --> 
+![alt text](image.png)
 
 
 
