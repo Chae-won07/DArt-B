@@ -123,7 +123,50 @@
 * 문자열 함수들의 종류를 이해하고 어떠한 상황에서 사용하는지 설명할 수 있다. 
 ~~~
 
-<!-- 새롭게 배운 내용을 자유롭게 정리해주세요.-->
+👉 문자열(STRING) 함수 
+- ""가 있는 것들, ("안녕", "DArt-B")
+- 문자열 붙이기 → CONCAT
+- 문자열 분리하기 → SPLIT
+- 특정 단어 수정하기 → REPLACE
+- 문자열 자르기 → TRIM
+- 영어 대문자 변환 → UPPER
+
+👉 각 함수 사용 
+- CONCAT(문자열1, 문자열2, ...)
+~~~
+  SELECT
+    CONCAT("안녕", "하세요") AS result
+
+→ result : 안녕하세요
+~~~    
+- SPLIT(문자열_원본, 나눌 기준이 되는 문자)
+```
+SELECT
+  SPLIT("가, 나, 다, 라", ", ") AS result
+
+→ result : 가 나 다 라 (, 기준으로 끊어짐)(배열)
+```
+- REPLACE(문자열_원본, 찾을 단어, 바꿀 단어)
+```
+SELECT 
+  REPLACE("안녕하세요", "안녕", "실천") AS result
+
+→ result : 실천하세요
+```
+* TRIM(문자열_원본, 잘라낼 단어)
+```
+SELECT 
+  TRIM("안녕하세요", "하세요") AS result
+
+→ result : 안녕 
+```
+- UPPER(문자열_원본)
+```
+SELECT 
+  UPPER("abc") AS result
+
+→ result : ABC
+```
 
 
 
