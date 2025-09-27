@@ -54,7 +54,33 @@
 * 오류 메시지를 보고 디버깅이라는 과정을 수행할 수 있다. 
 ~~~
 
-<!-- 새롭게 배운 내용을 자유롭게 정리해주세요.-->
+👉 오류의 정의 
+- 오류란 부정확하거나 잘못된 행동을 의미하며, 경우에 따라 '실수'와 같은 뜻으로 쓰이기도 함 
+- 오류 메시지는 사용자가 작성한 방식으로는 답을 얻을 수 없음을 안내하고, 문제가 있는 부분을 알려 주어 문제를 진단하는 역할을 함 (길잡이 역할+문제 진단)
+
+👉 가장 대표적인 오류 
+*  Syntax Error : 문법 오류 → 문법을 지키지 않아 생기는 오류 (번역 or 해석 후 해결 방법 : 구글, Chat GPT, 커뮤니티 · 지인) 
+※밑줄이 표시된 앞, 뒤 줄을 잘 보기※
+
+👉 오류 메시지 예시 
+
+* (1) <a>SELECT list must not be empty at [:] </a>→ SELECT 목록은 [:]에서 비어 있으면 안 됩니다. 
+(SELECT 다음에 특정 컬럼이나 *이 오지 않았을 때 발생하는 오류)
+
+* (2) <a>Number of arguments does not match for aggregate function COUNT</a> → 집계 함수 COUNT의 인자 수가 일치하지 않습니다. 
+(COUNT 괄호 안에 여러 인자가 들어있을 때 발생하는 오류)
+
+* (3) <a>SELECT list expression references column type1 a which is neither grouped nor aggregated</a> → SELECT 목록 식은 다음에서 그룹화되거나 집계되지 않은 열을 참조합니다. 
+(GROUP BY에 적절한 컬럼을 명시하지 않았을 때 발생하는 오류)
+
+* (4) <a>Expected end of input but got keyword SELECT</a> → 입력이 끝날 것으로 예상되었지만 SELECT 키워드가 입력되었습니다. 
+(하나의 쿼리에는 SELECT가 1개만 있어야 하기 때문에 발생하는 오류 → ; 혹은 드래그 앤 드랍으로 해결)
+
+* (5) <a>Expected end of input but got keyword WHERE at [:]</a> → 입력이 끝날 것으로 예상되었지만 [:]에서 키워드 WHERE을 얻었습니다. 
+(WHERE 전에 LIMIT이 올 때 발생하는 오류 → LIMIT을 맨 뒤로 옮기거나 삭제로 해결)
+
+* (6) <a>Expected ")" but got end of script at [:]</a> → ")"가 예상되지만 [:]에 스크립트가 끝났습니다. 
+(괄호를 제대로 작성하지 않았기 때문에 발생하는 오류)
 
 
 
