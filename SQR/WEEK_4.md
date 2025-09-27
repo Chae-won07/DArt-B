@@ -179,7 +179,36 @@ SELECT
 * 시간함수들의 종류와 시간의 차이를 추출하는 방법을 설명할 수 있다. 
 ~~~
 
-<!-- 새롭게 배운 내용을 자유롭게 정리해주세요.-->
+👉 날짜 및 시간 데이터 타입 파악(DATE, DATETIME, TIMESTAMP)
+- DATE : 시간 없이 연도와 날짜만 표시하는 데이터(2023-12-31)
+- DATETIME : 시간까지 표시하는 데이터(2023-12-31 14:00:00)  ← Time Zone 정보 無
+- TIME : 날짜와 무관하게 시간만 표시하는 데이터(23:59:59.00)
+- TIMESTAMP : UTC부터 경과한 시간을 나타내는 값(2023-12-31 14:00:00 UTC) ← Time Zone 정보 有
+
+👉 UTC와 Millisecond
+- UTC : Universal Time Coordinated, 국제적인 표준 시간 
+ - 타임존(Time Zone) : 지구상의 지역마다 기준이 되는 표준시간(UTC를 기준으로 한 시차). 즉, 서울의 Time Zone은 UTC+9이고, 뉴욕의 Time Zone은 UTC-5(여름 : -4)라고 표현할 수 있는 것 
+- **Millisecond(ms)** : 천분의 1초 , 주로 Millisecond에서 TIMESTAMP로, 이에서 DATETIME으로 변경하는 경우 ↑
+- Micorsecond(us) : 백만분의 1초 
+
+👉 날짜 및 시간 데이터 타입 변환 
+- TIMESTAMP ↔ DATETIME : 이 둘 사이의 변환을 자유롭게 할 수 있어야 함(※Time Zone을 누락하지 말자!※)
+- Millisecond → TIMESTAMP → DATETIME 쿼리
+~~~
+SELECT
+  TIMESTAMP_MILLIS(1704176819711) AS milli_to_timestamp_value,
+  DATETIME(TIMESTAMP_MILLIS(1704176819711), <a>'Asia/Seoul'</a>) AS datetime_value_asia; 
+~~~~
+
+- TIMESTAMP와 DATETIME 비교 
+~~~
+SELECT 
+  CURRENT_TIMESTAMP() AS timestamp_col
+  DATETIME(CURRENT_TIMESTAMP(), 'Asia/Seoul') AS datetime_col;
+~~~
+  - TIMESTAP : 타임존이 UTC라고 나오고, 한국 시간 -9시간
+  - DATETIME : 타임존이 가운데에 T로 나오고, 한국 Zone 사용시 한국 시간과 동일 
+
 
 
 
