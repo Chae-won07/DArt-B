@@ -86,15 +86,14 @@
 
 👉 알아두면 나중에 유용할 시각화 코드 정리
 
-① 중복 제거 히트맵 시각화
+① <A>중복 제거</A> 히트맵 시각화
 ~~~
 # 중복 제거 히트맵 시각화
-
 # 매트릭스의 우측 상단을 모두 True인 1로, 하단을 False인 0으로 변환.
 # True/False mask 배열로 변환.
 mask = np.triu(np.ones_like(df.select_dtypes(include=np.number).corr(), dtype=np.bool_))
 
-#  히트맵 그래프 생성
+# 히트맵 그래프 생성
 fig, ax = plt.subplots(figsize=(15, 10))
 sns.heatmap(df.select_dtypes(include=np.number).corr(),
             mask=mask,
@@ -104,6 +103,74 @@ sns.heatmap(df.select_dtypes(include=np.number).corr(),
             cmap="RdYlBu_r",
             cbar = True)
 ax.set_title('Wine Quality Correlation', pad = 15)
+~~~
+② <A>누적 막대그래프</A> 시각화
+~~~
+# 연도별, 고객 세그먼트 별 매출액 데이터 가공
+df_bar_2 = df.groupby(['Year', 'Segment'])['Sales'].sum().reset_index()
+
+# 고객 세그먼트를 컬럼으로 피벗
+df_bar_2_pv = df_bar_2.pivot(index='Year', 
+                             columns='Segment', 
+                             values='Sales').reset_index()
+
+df_bar_2_pv.head()
+~~~
+~~~
+# 연도 별 고객 세그먼트 별 매출액 누적 막대 그래프 시각화
+df_bar_2_pv.plot.bar(x='Year', stacked=True, figsize=(10,7))
+~~~
+③ 개별 <A>방사형 차트</A> 그리기
+~~~
+# 방사형 차트를 위한 인덱스 초기화
+df3 = df1.reset_index()
+df3.head()
+~~~
+~~~
+# 방사형 차트 - 하나씩 시각화
+
+labels = df3.columns[1:]
+num_labels = len(labels)
+
+# 등분점 생성    
+angles = [x/float(num_labels)*(2*pi) for x in range(num_labels)] 
+angles += angles[:1] # 시작점 생성
+    
+my_palette = plt.cm.get_cmap("Set2", len(df3.index))
+ 
+fig = plt.figure(figsize=(15,20))
+fig.set_facecolor('white')
+ 
+for i, row in df3.iterrows():
+    color = my_palette(i)
+    data = df3.iloc[i].drop('Tm').tolist()
+    data += data[:1]
+    
+    ax = plt.subplot(3,2,i+1, polar=True)
+    # 시작점 설정
+    ax.set_theta_offset(pi / 2)
+    # 시계방향 설정
+    ax.set_theta_direction(-1) 
+    
+    # 각도 축 눈금 생성
+    plt.xticks(angles[:-1], labels, fontsize=13)
+    # 각 축과 눈금 사이 여백생성
+    ax.tick_params(axis='x', which='major', pad=15)
+    # 반지름 축 눈금 라벨 각도 0으로 설정
+    ax.set_rlabel_position(0)
+    # 반지름 축 눈금 설정
+    plt.yticks([0,5,10,15,20],['0','5','10','15','20'], fontsize=10) 
+    plt.ylim(0,20)
+    
+    # 방사형 차트 출력
+    ax.plot(angles, data, color=color, linewidth=2, linestyle='solid')
+    # 도형 안쪽 색상 설정
+    ax.fill(angles, data, color=color, alpha=0.4) 
+    # 각 차트의 제목 생성
+    plt.title(row.Tm, size=20, color=color,x=-0.2, y=1.2, ha='left') 
+# 차트 간 간격 설정 
+plt.tight_layout(pad=3) 
+plt.show()
 ~~~
 
 
@@ -126,9 +193,9 @@ ax.set_title('Wine Quality Correlation', pad = 15)
 ![alt text](images/WEEK_4_실습(2).png)
 ![alt text](images/WEEK_4_실습(2)_2.png)
 (3) 10.3.1.시간 시각화
-
+![alt text](images/WEEK_4_실습(3).png)
 (4) 10.4.1.비교 시각화
-
+![alt text](images/WEEK_4_실습(4).png)
 ~~~
 인증 이미지가 없으면 과제 수행으로 인정되지 않습니다.
 ~~~
