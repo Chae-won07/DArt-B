@@ -83,7 +83,28 @@
   - (참고)
   
     ![alt text](images/WEEK_4_상관계수.png)
-*     
+
+👉 알아두면 나중에 유용할 시각화 코드 정리
+
+① 중복 제거 히트맵 시각화
+~~~
+# 중복 제거 히트맵 시각화
+
+# 매트릭스의 우측 상단을 모두 True인 1로, 하단을 False인 0으로 변환.
+# True/False mask 배열로 변환.
+mask = np.triu(np.ones_like(df.select_dtypes(include=np.number).corr(), dtype=np.bool_))
+
+#  히트맵 그래프 생성
+fig, ax = plt.subplots(figsize=(15, 10))
+sns.heatmap(df.select_dtypes(include=np.number).corr(),
+            mask=mask,
+            vmin=-1,
+            vmax = 1,
+            annot=True,
+            cmap="RdYlBu_r",
+            cbar = True)
+ax.set_title('Wine Quality Correlation', pad = 15)
+~~~
 
 
 
@@ -103,6 +124,7 @@
 ![alt text](images/WEEK_4_실습(1).png)
 (2) 10.2.3.공분산과 상관성 분석
 ![alt text](images/WEEK_4_실습(2).png)
+![alt text](images/WEEK_4_실습(2)_2.png)
 (3) 10.3.1.시간 시각화
 
 (4) 10.4.1.비교 시각화
