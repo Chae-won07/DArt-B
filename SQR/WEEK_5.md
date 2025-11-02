@@ -241,7 +241,80 @@ SELECT
 * 4-5, 4-7 각각에서 두 문제 이상 (최소 4문제) 푼 내용 정리하기
 ~~~
 
-<!-- 새롭게 배운 내용을 자유롭게 정리해주세요.-->
+👉 **4-5(1)** : 트레이너가 포켓몬을 포획한 날짜(catch_date)를 기준으로, 2023년 1월에 포획한 포켓몬의 수를 계산해주세요. 
+- 풀이 
+~~~
+SELECT 
+  COUNT(DISTINCT id) AS cnt
+FROM basic.trainer_pokemon 
+WHERE 
+  EXTRACT(YEAR FROM DATETIME(catch_datetime, "Asia/Seoul")) = 2023
+  AND EXTRACT(MONTH FROM DATETIME(catch_datetime, "Asia/Seoul")) = 1
+~~~
+- 틀린 부분 : DATETIME(catch_datetime, "Asia/Seoul") ← "Asia/Seoul"을 붙이지 않았음 
+- 맞은 부분 : EXTRACT(YEAR FROM~) AND EXTRACT(MONTH FROM~)
+- 새롭게 배운 점 : 컬럼 설명을 꼭 확인하고 쿼리 작성하기🤔
+
+👉 **4-5(2)** : 배틀이 일어난 시간(battle_datetime)을 기준으로, 오전 6시에서 오후 6시사이에 일어난 배틀의 수를 계산해주세요.
+- 풀이 
+~~~
+SELECT
+  COUNT(DISTINCT id) AS battle_cnt
+FROM basic.battle
+WHERE 
+  EXTRACT(HOUR FROM battle_datetime) >=6
+  AND EXTRACT(HOUR FROM battle_datetime) <=18
+~~~
+- 틀린 부분 :  EXTRACT(HOUR FROM battle_datetime) <=18 ← 오후 6시를 18로 표현해야겠다고 생각하지 못함 
+- 맞은 부분 : EXTRACT(HOUR FROM battle_datetime) >=6
+- 새롭게 배운 점 : EXTRACT 구문을 두 개 작성하지 않고 'BETWEEN 6 and 18'으로 표현해도 된다😮
+
+👉 **4-7(1)** : 포켓몬의 'speed'가 70 이상이면 '빠름', 그렇지 않으면 '느림'으로 표시하는 새로운 컬럼 'Speed_Category'를 만들어 주세요. 
+- 풀이 
+~~~
+SELECT 
+  id,
+  kor_name,
+  speed, 
+  IF(speed>=70, "빠름", "느림") AS Speed_Category
+FROM basic.pokemon
+~~~
+- 틀린 부분 : WHEN으로 풀려고 시도함.. (너무 복잡하게 풀려고 했음) 
+- 맞은 부분 : ..😢
+- 새롭게 배운 점 : 단일 조건인지 아닌지 파악 잘 하기! 
+
+👉 **4-7(2)** : 각 트레이너 배지 개수(badge_count)를 기준으로, 5개 이하면 'Beginner', 6개에서 8개 사이면 'Intermediate', 그 이상이면 'Advanced'로 분류해주세요. 
+- 풀이 
+~~~
+SELECT
+  id,
+  name,
+  badge_count,
+  CASE 
+    WHEN badge_count >=9 THEN "Advanced"
+    WHEN badge_count BETWEEN 6 AND 8 THEN "Intermediate"
+  ELSE "Beginner"
+  END AS trainer_level
+FROM basic.trainer 
+~~~
+- 틀린 부분 : badge_count, Advanced, Intermediate 등에 ''를 붙여서 오류가 뜸 
+- 맞은 부분 : CASE WHEN 구문을 써서 문제 풀이에 접근함, 'BETWEEN 6 AND 8'를 적절하게 사용함 
+- 새롭게 배운 점 : 😀
+
+👉 **4-7(3)** : 트레이너가 포켓몬을 포획한 날짜(catch_date)가 '2023-01-01' 이후이면 'Recent', 그렇지 않으면 'Old'로 분류해주세요.
+- 풀이 
+~~~
+SELECT 
+  id,
+  trainer_id,
+  pokemon_id,
+  catch_datetime,
+  IF(DATE(catch_datetime, "Asia/Seoul") > "2023-01-01", "Recent", "Old") AS recent_or_old
+FROM basic.trainer_pokemon
+~~~
+- 틀린 부분 : DATE(catch_datetime, "Asia/Seoul") > "2023-01-01" ← 에서 '2023-01-01' 자체를 부등호로 비교할 수 있을 것이라고 생각하지 못함 
+- 맞은 부분 : IF 구문을 써서 문제 풀이에 접근함 
+- 새롭게 배운 점 : TIMESTAMP, DATETIME 등 시간 데이터 관련해서 조금 더 이해가 필요할 것 같음😱
 
 
 
