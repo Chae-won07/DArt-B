@@ -58,7 +58,119 @@
 * CURRENT_TIME, EXTRACT, DATETIME_TRUNC, PARSE_DATETIME, FROMAT_DATETIME 을 설명할 수 있다. 
 ~~~
 
-<!-- 새롭게 배운 내용을 자유롭게 정리해주세요.-->
+👉 **CURRENT_DATETIME** 
+- CURRENT_DATETIME([time_zone]) : 현재 DATETIME 출력
+~~~
+SELECT
+  CURRENT_DATE()AScurrent_date,
+  CURRENT_DATE("Asia/Seoul")ASasia_date,
+  CURRENT_DATETIME()AScurrent_datetime,
+  CURRENT_DATETIME("Asia/Seoul")AScurrent_datetime_asia;
+~~~
+---
+👉 **EXTRACT**
+- DATETIME에서 특정 부분만 추출하고 싶은 경우
+- EXTRACT(특정 부분 FROM DATETIME) 
+~~~
+EXTRACT(DATE FROM DATETIME "2024-01-02 14:00:00") AS date, 
+→ 2024-01-02
+
+EXTRACT(YEAR FROM DATETIME "2024-01-02 14:00:00") AS year, 
+→ 2024
+
+EXTRACT(MONTH FROM DATETIME "2024-01-02 14:00:00" AS DATETIME) AS month, 
+→ 1
+
+EXTRACT(DAY FROM DATETIME "2024-01-02 14:00:00" AS DATETIME) AS day, 
+→ 2
+
+EXTRACT(HOUR FROM DATETIME "2024-01-02 14:00:00" AS DATETIME) AS hour, 
+→ 14
+
+EXTRACT(MINUTE FROM DATETIME "2024-01-02 14:00:00" AS DATETIME) AS minute, 
+→ 0
+~~~
+- ※EXTRACT(DAYOFWEEK FROM datetime_col)※ : 요일을 추출하고 싶은 경우 → 요일을 숫자 형태로 반환, '일요일 =1'을 기준으로 [1~7] 범위의 값을 반환함 
+---
+👉 **DATETIME_TRUNC**
+- DATETIME_TRUNC(datetime_col, 특정 부분) : 특정 부분을 기준으로 자름 
+- 시간(HOUR) 자를 때 많이 사용 
+~~~
+SELECT
+  DATETIME "2024-03-02 14:42:13" AS original_data,
+
+  DATETIME_TRUNC(DATETIME "2024-03-02 14:42:13", DAY) AS day_trunc,
+  → 2024-03-02T00:00:00
+
+  DATETIME_TRUNC(DATETIME "2024-03-02 14:42:13", YEAR) AS year_trunc,
+  → 2024-01-01T00:00:00
+
+  DATETIME_TRUNC(DATETIME "2024-03-02 14:42:13", MONTH) AS month_trunc,
+  → 2024-03-01T00:00:00
+
+  DATETIME_TRUNC(DATETIME "2024-03-02 14:42:13", HOUR) AS hour_trunc;
+  → 2024-03-02T14:00:00
+~~~
+---
+👉 PARSE_DATETIME
+- 문자열로 저장된 DATETIME을 DATETIME 타입으로 바꾸고 싶은 경우
+- PARSE_DATETIME('문자열의형태', 'DATETIME 문자열') AS datetime
+- "파싱하다" : 문자열을 보고 알맞은 것으로 배치한다 
+~~~
+SELECT
+  PARSE_DATETIME('%Y-%m-%d%H:%M:%S', '2024-01-11 12:35:35') AS parse_datetime;
+  → 2024-01-11T12:35:35
+~~~
+---
+👉 FORMAT_DATETIME
+-  DATETIME 타입 데이터를 특정 형태의 문자열 데이터로 변환하고 싶은 경우
+- ※ 문자열 → DATETIME : PARSE_DATETIME
+- ※ DATETIME → 문자열 : FORMAT_DATETIME
+~~~
+SELECT
+  FORMAT_DATETIME("%c", DATETIME "2024-01-1112:35:35") AS formatted;
+~~~
+---
+👉 LAST_DAY
+- 마지막 날을 알고 싶은 경우(자동으로 월의 마지막 값을 계산해서 특정 연산을 할 경우)
+- LAST_DAY(DATETIME) : 월의 마지막 값을 반환
+~~~
+LAST_DAY(DATETIME '2024-01-03 15:30:00') AS last_day,
+→ 2024-01-31 (월의 마지막 일자)
+
+LAST_DAY(DATETIME '2024-01-03 15:30:00', MONTH) AS last_day_month,
+→ 2024-01-31
+
+LAST_DAY(DATETIME '2024-01-03 15:30:00', WEEK) AS last_day_week,
+→ 2024-01-06 (대부분 일요일 기준) 
+
+LAST_DAY(DATETIME '2024-01-03 15:30:00', WEEK(SUNDAY)) AS last_day_week_sun,
+→ 2024-01-06(일요일 기준으로 마지막 날 : 토요일 날짜)
+
+LAST_DAY(DATETIME '2024-01-03 15:30:00', WEEK(MONDAY)) AS last_day_week_mon
+→ 2024-01-06(월요일 기준으로 마지막 날 : 일요일 날짜) 
+~~~
+ ---
+👉 DATETIME_DIFF
+- 두 DATETIME의 차이를 알고 싶은 경우
+- DATETIME_DIFF(첫 DATETIME, 두번째 DATETIME, 궁금한 차이)
+~~~
+SELECT
+  DATETIME_DIFF(first_datetime, second_datetime, DAY) AS day_diff1,
+  → 1187 (날짜 차이)
+  DATETIME_DIFF(second_datetime, first_datetime, DAY) AS day_diff2,
+  → -1187
+  DATETIME_DIFF(first_datetime, second_datetime, MONTH) AS month_diff,
+  → 39 (개월 차이) 
+  DATETIME_DIFF(first_datetime, second_datetime, WEEK) AS week_diff,
+  → 170 (주 차이)
+FROM(
+  SELECT
+    DATETIME "2024-04-02 10:20:00" AS first_datetime,
+    DATETIME "2021-01-01 15:30:00" AS second_datetime,
+  )
+~~~
+
 
 
 
