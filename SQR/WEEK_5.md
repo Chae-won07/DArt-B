@@ -181,7 +181,56 @@ FROM(
 * 조건문 함수의 기능을 이해하고, 설명할 수 있다. 
 ~~~
 
-<!-- 새롭게 배운 내용을 자유롭게 정리해주세요.-->
+👉 조건문 함수? 
+- 조건문 : 특정 조건이 충족되면 → 어떤 행동을 하자 (특정 조건이 참일 때 A, 아닐 때 B)
+- ① 조건에 따른 분기 처리가 필요한 경우 ② 조건에 따라 다른 값을 표시하고 싶은 경우 (컬럼 변환 등) 
+- CASE WHEN 함수, IF 함수 
+- 특정 카테고리를 하나로 합치는 전처리가 필요할 때 조건문 함수를 사용할 수 있음(예시 : 1, 2, 3학년 → 저학년 / 4, 5, 6학년 → 고학년)(월, 화, 수, 목, 금 → 주중 / 토, 일 → 주말) 
+
+👉 CASE WHEN
+- 여러 조건이 있을 경우 유용 
+- 문법
+~~~
+SELECT
+  CASE
+    WHEN 조건 1 THEN 조건1이 참일 경우 결과
+    WHEN 조건 2 THEN 조건2가 참일 경우 결과
+    ELSE 그 외 조건일 경우 결과
+END AS 새로운_컬럼_이름
+~~~
+- 예시 : 포켓몬 타입 중 Rock(바위) 타입과 Ground(땅) 타입을 묶어서 → Rock&Ground 타입 새로 만들기
+~~~
+SELECT
+  new_type1,
+  COUNT(DISTINCTid)AScnt
+FROM(
+  SELECT
+  *,
+  CASE
+    WHEN(type1IN("Rock","Ground"))OR(type2IN("Rock","Ground"))
+    THEN"Rock&Ground"
+  ELSEtype1
+  ENDASnew_type1
+FROMbasic.pokemon
+)
+GROUPBY
+new_type1
+~~~
+- **조건의 순서**가 매우 중요함 : 처음 조건문에서 처리가 되면 이후는 다시 체크하지 않음 (조건 1, 조건 2 둘 다에 해당하면 앞선 순서를 따름)
+
+👉 IF 
+- 단일 조건일 경우 유용 
+- 문법 
+~~~
+IF(조건문, True일 때의 값, False일 때의 값) AS 새로운_컬럼_이름
+~~~
+- 예시
+~~~
+SELECT
+  IF(1=1, '동일한 결과', '동일하지 않은 결과') AS result1, 
+  IF(1=2, '동일한 결과', '동일하지 않은 결과') AS result2
+~~~
+
 
 
 
