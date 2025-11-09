@@ -110,7 +110,51 @@
 * JOIN 을 활용한 쿼리를 작성할 수 있다. 
 ~~~
 
-<!-- 새롭게 배운 내용을 자유롭게 정리해주세요.-->
+👉 쿼리 작성 흐름
+- (1) 테이블 확인: 각 테이블에 어떤 컬럼과 데이터가 있는지 확인
+- (2) 기준 테이블 정의: 가장 중심이 될, 많이 참고할 테이블을 기준으로 설정
+- (3) JOIN Key 찾기: 여러 테이블을 연결할 공통 키(ON 조건)를 파악
+- (4) 결과 예상하기: 최종 결과 테이블의 형태를 손이나 엑셀로 미리 그려보기(정답지처럼)
+- (5) 쿼리 작성 / 검증: 실제 쿼리 실행 후 예상한 결과와 일치하는지 확인
+
+👉 JOIN 쿼리 기본 구조
+* `FROM` 절 밑에 `JOIN` 작성
+* `JOIN` 종류 명시 후, `ON`으로 연결 기준(Key) 지정
+* `CROSS JOIN`만 `ON` 생략 가능
+
+(1) **INNER JOIN** – 두 테이블의 공통 키만 연결
+```
+SELECT 
+  col
+FROM table_a AS A
+INNER JOIN table_b AS B
+ON A.key = B.key;
+```
+(2) **LEFT / RIGHT JOIN** – 기준 테이블 한쪽 전체 포함
+```
+SELECT 
+  col
+FROM table_a AS A
+LEFT JOIN table_b AS B
+ON A.key = B.key;
+```
+(※ RIGHT JOIN도 동일 구조, 단 기준 테이블이 오른쪽)
+
+(3) **FULL JOIN** – 양쪽 테이블 모두 포함
+```
+SELECT 
+  col
+FROM table_a AS A
+FULL JOIN table_b AS B
+ON A.key = B.key;
+```
+(4) **CROSS JOIN** – 모든 행 조합(ON 불필요)
+```
+SELECT 
+  col
+FROM table_a AS A
+CROSS JOIN table_b AS B;
+```
 
 
 
