@@ -232,10 +232,56 @@ ORDER BY
 
 **(3) 트레이너의 고향(hometown)과 포켓몬을 포획한 위치(location)를 비교하여, 자신의 고향에서 포켓몬을 포획한 트레이너의 수를 계산해주세요.**
 ~~~
+SELECT
+  COUNT (DISTINCT tp.trainer_id) AS trainer_uniq,
+FROM basic.trainer AS t 
+LEFT JOIN basic.trainer_pokemon AS tp 
+ON t.id = tp.trainer_id
+WHERE 
+  location IS NOT NULL 
+  AND t.hometown = tp.location
+~~~
+👉새롭게 알게 된 점
+* DISTINCT 써서 고유값 확인하는 습관 들이기
+→ 중복 있는지, 데이터 제대로 정제됐는지 볼 때 유용함（항상 염두에 두고 쓰면 데이터 이해도 높아짐）
+
+**(4) Master 등급인 트레이너들은 어떤 타입의 포켓몬을 제일 많이 보유하고 있을까요?**
+~~~
+SELECT
+  type1,
+  COUNT(tp.id) AS pokemon_cnt
+FROM ( 
+SELECT 
+  id,
+  trainer_id,
+  pokemon_id, 
+  status 
+FROM basic.trainer_pokemon 
+WHERE 
+  status IN ("Active", "Training")
+) AS tp 
+LEFT JOIN basic.pokemon AS p 
+ON tp.pokemon_id = p.id 
+LEFT JOIN basic.trainer AS t
+ON tp.trainer_id = t.id 
+WHERE 
+  t.achievement_level = "Master"
+GROUP BY 
+  type1
+ORDER BY
+  2 DESC
+LIMIT 1  
+~~~
+👉새롭게 알게 된 점
+* LEFT JOIN은 여러 번 연속해서 쓸 수 있음 (LEFT JOIN 2번, 3번, N번 가능함)
+→ 기준 테이블(왼쪽 테이블)은 계속 유지되고, 오른쪽 테이블만 새로 붙는 구조임
+
+**(5) Incheon 출신 트레이너들은 1세대, 2세대 포켓몬을 각각 얼마나 보유하고 있나요?**
+~~~
 
 ~~~
 👉새롭게 알게 된 점
-
+* 
 
 
 
