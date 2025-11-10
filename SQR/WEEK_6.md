@@ -164,8 +164,78 @@ CROSS JOIN table_b AS B;
 ✅ 학습 목표 :
 * 연습문제(3문제 이상) 푼 것들 정리하기
 ~~~
+**(1) 트레이너가 보유한 포켓몬들은 얼마나 있는지 알 수 있는 쿼리를 작성해주세요.**
 
-<!-- 새롭게 배운 내용을 자유롭게 정리해주세요.-->
+~~~
+SELECT 
+  kor_name,
+  COUNT(tp.id) AS pokemon_cnt
+FROM (
+SELECT 
+  id,
+  trainer_id,
+  pokemon_id,
+  status 
+FROM basic.trainer_pokemon
+WHERE 
+  status IN ("Active", "Training")
+) AS tp
+LEFT JOIN basic.pokemon AS p  
+ON tp.pokemon_id = p.id
+GROUP BY
+  kor_name 
+ORDER BY 
+  pokemon_cnt DESC 
+~~~
+👉새롭게 알게 된 점
+* (1) `WHERE`로 먼저 필터링해서 row 수 줄인 다음에 `JOIN`하는 게 효율적임
+* (2) 오류 메시지 `Column name id is ambiguous` 뜨면 컬럼 이름이 겹친다는 뜻임
+→ JOIN한 테이블들 중 같은 컬럼명 있으면 `table_name.column_name`으로 구체적으로 써야 함
+* (3) SQL 실행 순서 생각할 때
+: SELECT
+→ FROM
+→ **"JOIN"**
+→ WHERE
+→ GROUP BY
+순서로 흘러감
+
+**(2) 각 트레이너가 가진 포켓몬 중에서 'Grass' 타입의 포켓몬 수를 계산해주세요. (단, 편의를 위해 type1 기준으로 계산해주세요.)**
+~~~
+SELECT
+  p.type1,
+  COUNT(tp.id) AS pokemon_cnt
+FROM (
+  SELECT 
+    id, 
+    trainer_id,
+    pokemon_id,
+    status 
+  FROM basic.trainer_pokemon 
+  WHERE 
+    status IN ("Active", "Training") 
+) AS tp
+LEFT JOIN basic.pokemon AS p 
+ON tp.pokemon_id = p.id 
+WHERE 
+  type1 = "Grass"
+GROUP BY 
+  type1
+ORDER BY
+  2 DESC 
+~~~
+👉새롭게 알게 된 점
+* (1) LEFT JOIN 쓸 때는 어떤 테이블을 왼쪽에 둘지가 중요함
+→ 계속 문제 풀어보면서 감 잡는 게 좋음
+→ 내가 중점적으로 봐야 하는 정보, 구하고자 하는 데이터가 어디 테이블에 있는지 먼저 확인해야 함
+* (2) 보통 JOIN할 수 있는 key가 많이 보이는 테이블을 왼쪽(LEFT)에 두는 경우 많음
+→ 예외도 있음 (항상 그런 건 아님)
+
+**(3) 트레이너의 고향(hometown)과 포켓몬을 포획한 위치(location)를 비교하여, 자신의 고향에서 포켓몬을 포획한 트레이너의 수를 계산해주세요.**
+~~~
+
+~~~
+👉새롭게 알게 된 점
+
 
 
 
