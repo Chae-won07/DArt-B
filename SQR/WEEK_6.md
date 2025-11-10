@@ -328,7 +328,8 @@ https://school.programmers.co.kr/learn/courses/30/lessons/144854
 ![alt text](<images/중고거래 댓글 조회(2).png>)
 ![<!-- 정답을 맞추게 되면, 정답입니다. 이 부분을 캡처해서 이 주석을 지우시고 첨부해주시면 됩니다. --> ](<images/중고거래 댓글 조회.png>)
 **(2) 도서와 저자 리스트 출력하기**
-
+![alt text](<images/도서와 저자.png>)
+![alt text](<images/도서와 저자 리스트 출력(1).png>)
 
 
 ---
