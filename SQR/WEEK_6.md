@@ -278,10 +278,31 @@ LIMIT 1
 
 **(5) Incheon 출신 트레이너들은 1세대, 2세대 포켓몬을 각각 얼마나 보유하고 있나요?**
 ~~~
-
+SELECT 
+  generation,
+  COUNT(tp.id) AS pokemon_cnt
+FROM( 
+SELECT 
+  id, 
+  trainer_id,
+  pokemon_id,
+  status 
+FROM basic.trainer_pokemon 
+WHERE 
+  status IN ("Active", "Training") 
+) AS tp 
+LEFT JOIN basic.trainer AS t
+ON tp.trainer_id = t.id 
+LEFT JOIN basic.pokemon AS p 
+ON tp.pokemon_id = p.id 
+WHERE 
+  t.hometown = "Incheon"
+GROUP BY 
+  generation
 ~~~
 👉새롭게 알게 된 점
-* 
+* 회사 데이터는 고정돼 있지 않고 실시간으로 변하는 경우 많음
+→ 그래서 generation 같은 세대 구분 컬럼은 명확히 해두는 게 좋음
 
 
 
@@ -303,7 +324,10 @@ https://school.programmers.co.kr/learn/courses/30/lessons/144854
 
 > 조건에 맞는 도서와 저자 리스트 출력하기 (JOIN)
 
-<!-- 정답을 맞추게 되면, 정답입니다. 이 부분을 캡처해서 이 주석을 지우시고 첨부해주시면 됩니다. --> 
+**(1) 중고거래 댓글 조회하기**
+![alt text](<images/중고거래 댓글 조회(2).png>)
+![<!-- 정답을 맞추게 되면, 정답입니다. 이 부분을 캡처해서 이 주석을 지우시고 첨부해주시면 됩니다. --> ](<images/중고거래 댓글 조회.png>)
+**(2) 도서와 저자 리스트 출력하기**
 
 
 
