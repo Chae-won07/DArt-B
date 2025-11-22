@@ -235,7 +235,7 @@ SQL 쿼리 실행 후 얻은 결과가 내가 예상한 결과와 일치하는�
 ② 특정 유저 선택
 
 * 예시로 trainer/player_id가 7인 유저를 선정.
-~~~
+~~~sql
 SELECT
   *
 FROM `basic.battle`
@@ -250,7 +250,7 @@ WHERE
 ④ 쿼리 작성 → 통합 테이블 생성 (trainer_id 기준으로 펼치기)
 * `player1_id`와 `player2_id`로 나뉘어 있어 바로 집계가 어렵기 때문에,
 두 플레이어를 하나의 `trainer_id`로 통합한 테이블을 만든다.
-~~~
+~~~sql
 SELECT 
   *
 FROM (
@@ -259,9 +259,7 @@ FROM (
     player1_id AS trainer_id,
     winner_id
   FROM `basic.battle`
-
   UNION ALL
-
   SELECT 
     id AS battle_id,
     player2_id AS trainer_id,
@@ -271,7 +269,7 @@ FROM (
 ORDER BY battle_id;
 ~~~
 * trainer_id = 7의 총 배틀 횟수 확인
-~~~
+~~~sql
 WITH battle_basic AS (
   SELECT 
     id AS battle_id,
@@ -295,7 +293,7 @@ WHERE trainer_id = 7
 GROUP BY trainer_id;
 ~~~
 * 승·패·무 결과 만들기 (CASE WHEN)
-~~~
+~~~sql
 WITH battle_basic AS (
   SELECT 
     id AS battle_id,
@@ -321,7 +319,7 @@ FROM battle_basic
 WHERE trainer_id = 7;
 ~~~
 ⑤ COUNTIF로 실제 승률 계산 후 예상값과 비교
-~~~
+~~~sql
 WITH battle_basic AS (
   SELECT 
     id AS battle_id,
@@ -360,7 +358,7 @@ GROUP BY trainer_id;
 * 예상값과 실제값이 일치한다면,
 `WHERE trainer_id = 7` 조건을 제거하고
 9회 이상 배틀한 유저만 대상으로 필터링한다.
-~~~
+~~~sql
 ...
 -- WHERE trainer_id = 7  ← 주석 처리
 ...
@@ -384,29 +382,70 @@ HAVING
 https://school.programmers.co.kr/learn/courses/30/lessons/157343
 
 > 특정 옵션이 포함된 자동차 리스트 구하기
-~~~
+
 ☑️풀이 과정 : 
+* OPTIONS 컬럼에서 특정 옵션 포함 여부 LIKE로 확인함
+* '%네비게이션%' 패턴으로 부분 문자열 검색함
+* 정렬은 CAR_ID 기준으로 DESC 적용함
+
 ☑️결과 : 
-💡배운 점 : 
+~~~sql
+SELECT 
+  *
+FROM 
+  CAR_RENTAL_COMPANY_CAR
+WHERE OPTIONS LIKE '%네비게이션%'
+ORDER BY CAR_ID DESC;
 ~~~
+💡배운 점 : 문자열 리스트는 LIKE 검색이 필요하며, '%패턴'은 인덱스 사용 어려워 성능 저하 가능함. 정렬 방향은 DESC처럼 명시해야 함.
+
 
 https://school.programmers.co.kr/learn/courses/30/lessons/59044
 
 > 오랜 기간 보호한 동물(1) 
-~~~
+
 ☑️풀이 과정 : 
+* 입양 여부는 LEFT JOIN 후 O.ANIMAL_ID IS NULL 로 판별함
+* 오래 보호된 순은 DATETIME ASC 정렬함
+* 조회 개수는 LIMIT 3 적용함
+
 ☑️결과 : 
-💡배운 점 : 
+~~~sql
+SELECT 
+  I.NAME, 
+I.DATETIME
+FROM ANIMAL_INS I
+LEFT JOIN ANIMAL_OUTS O 
+  ON I.ANIMAL_ID = O.ANIMAL_ID
+WHERE O.ANIMAL_ID IS NULL
+ORDER BY I.DATETIME
+LIMIT 3;
 ~~~
+💡배운 점 : LEFT JOIN + IS NULL 로 누락 데이터 찾는 패턴 자주 쓰이며, 오래된 날짜는 값이 작아 ASC 정렬을 사용함. LIMIT로 결과 수를 쉽게 제한할 수 있음.
+
 
 https://school.programmers.co.kr/learn/courses/30/lessons/59043
 
 > 있었는데요 없었습니다.
-~~~
+
 ☑️풀이 과정 : 
+* 입양된 동물만 비교하려고 INNER JOIN 사용함
+* 오류 데이터 조건은 OUT.DATETIME < INS.DATETIME 로 판단함
+* 보호 시작일 빠른 순으로 I.DATETIME ASC 정렬함
+
 ☑️결과 : 
-💡배운 점 : 
+~~~sql
+SELECT 
+  I.ANIMAL_ID, 
+  I.NAME
+FROM ANIMAL_INS I
+JOIN ANIMAL_OUTS O 
+  ON I.ANIMAL_ID = O.ANIMAL_ID
+WHERE O.DATETIME < I.DATETIME
+ORDER BY I.DATETIME;
 ~~~
+💡배운 점 : DATETIME은 숫자처럼 직접 비교 가능하며, 오류 검증은 핵심 조건식(입양일 < 보호 시작일)만 정확히 잡으면 쉽게 해결됨.
+
 
 
 ## LeetCode 문제
@@ -414,24 +453,41 @@ https://school.programmers.co.kr/learn/courses/30/lessons/59043
 https://leetcode.com/problems/combine-two-tables/description/
 
 > 175. Combine Two Tables
-~~~
+
 ☑️풀이 과정 : 
+
 ☑️결과 : 
-💡배운 점 : 
+~~~sql
+
 ~~~
+💡배운 점 : 
+
 
 https://leetcode.com/problems/list-the-products-ordered-in-a-period/
 
 > 1327. List the Products Ordered in a Period
-~~~
+
 ☑️풀이 과정 : 
+
 ☑️결과 : 
-💡배운 점 : 
+~~~sql
+
 ~~~
+💡배운 점 : 
 
 
 
-<!-- 정답을 맞추게 되면, 정답입니다. 이 부분을 캡처해서 이 주석을 지우시고 첨부해주시면 됩니다. --> 
+
+### <문제 인증 캡쳐>
+(1) 특정 옵션이 포함된 자동차 리스트 구하기 
+![alt text](<images/(WEEK7)SQL프로그래머스 문제/(1) 자동차.png>)
+(2) 오랜 기간 보호한 동물(1)
+![alt text](<images/(WEEK7)SQL프로그래머스 문제/(2) 동물.png>)
+(3) 있었는데요 없었습니다.
+![alt text](<images/(WEEK7)SQL프로그래머스 문제/(3) 있었는데.png>)
+(4) Combine Two Tables 
+
+(5) List the Products Ordered in a Period
 
 
 
@@ -454,8 +510,23 @@ where u.region= 'Busan'			order by o.OrderID
 
 
 
-~~~
-여기에 답을 작성해주세요.
+~~~sql
+SELECT
+  u.name,
+  o.OrderID,
+  p.ProductName,
+  od.Quantity,
+  od.UnitPrice
+FROM Users u
+JOIN Orders o
+  ON u.id = o.userId
+JOIN OrderDetails od
+  ON o.OrderID = od.orderID
+JOIN Products p
+  ON od.ProductID = p.ProductID
+WHERE u.region = 'Busan'
+ORDER BY o.OrderID;
+
 ~~~
 
 
