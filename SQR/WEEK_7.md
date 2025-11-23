@@ -384,9 +384,9 @@ https://school.programmers.co.kr/learn/courses/30/lessons/157343
 > 특정 옵션이 포함된 자동차 리스트 구하기
 
 ☑️풀이 과정 : 
-* OPTIONS 컬럼에서 특정 옵션 포함 여부 LIKE로 확인함
-* '%네비게이션%' 패턴으로 부분 문자열 검색함
-* 정렬은 CAR_ID 기준으로 DESC 적용함
+* OPTIONS 컬럼에서 특정 옵션 포함 여부 LIKE로 확인함.
+* '%네비게이션%' 패턴으로 부분 문자열 검색함.
+* 정렬은 CAR_ID 기준으로 DESC 적용함.
 
 ☑️결과 : 
 ~~~sql
@@ -405,9 +405,9 @@ https://school.programmers.co.kr/learn/courses/30/lessons/59044
 > 오랜 기간 보호한 동물(1) 
 
 ☑️풀이 과정 : 
-* 입양 여부는 LEFT JOIN 후 O.ANIMAL_ID IS NULL 로 판별함
-* 오래 보호된 순은 DATETIME ASC 정렬함
-* 조회 개수는 LIMIT 3 적용함
+* 입양 여부는 LEFT JOIN 후 O.ANIMAL_ID IS NULL로 판별함.
+* 오래 보호된 순은 DATETIME ASC 정렬함.
+* 조회 개수는 LIMIT 3 적용함.
 
 ☑️결과 : 
 ~~~sql
@@ -429,9 +429,9 @@ https://school.programmers.co.kr/learn/courses/30/lessons/59043
 > 있었는데요 없었습니다.
 
 ☑️풀이 과정 : 
-* 입양된 동물만 비교하려고 INNER JOIN 사용함
-* 오류 데이터 조건은 OUT.DATETIME < INS.DATETIME 로 판단함
-* 보호 시작일 빠른 순으로 I.DATETIME ASC 정렬함
+* 입양된 동물만 비교하려고 INNER JOIN 사용함.
+* 오류 데이터 조건은 OUT.DATETIME < INS.DATETIME 로 판단함.
+* 보호 시작일 빠른 순으로 I.DATETIME ASC 정렬함.
 
 ☑️결과 : 
 ~~~sql
@@ -455,12 +455,20 @@ https://leetcode.com/problems/combine-two-tables/description/
 > 175. Combine Two Tables
 
 ☑️풀이 과정 : 
+* Person 에 있는 사람은 모두 나와야 하니까 Person을 왼쪽 테이블로 두고 LEFT JOIN함 .
+* Address에 해당 personId 가 없으면 city, state 가 자동으로 NULL로 뜸.
 
 ☑️결과 : 
 ~~~sql
-
+SELECT 
+  p.firstName,
+  p.lastName,
+  a.city,
+  a.state
+FROM Person AS p
+LEFT JOIN Address AS a 
+     ON p.personId = a.PersonId;
 ~~~
-💡배운 점 : 
 
 
 https://leetcode.com/problems/list-the-products-ordered-in-a-period/
@@ -468,27 +476,39 @@ https://leetcode.com/problems/list-the-products-ordered-in-a-period/
 > 1327. List the Products Ordered in a Period
 
 ☑️풀이 과정 : 
+* WHERE에서 2020-02-01 ~ 2020-02-29 만 필터링함.
+* GROUP BY로 제품별 합계를 구함.
+* HAVING으로 합계가 100 이상인 제품만 남김.
 
 ☑️결과 : 
 ~~~sql
-
+SELECT 
+  p.product_name,
+  SUM(o.unit) AS unit
+FROM Orders AS o 
+JOIN products AS p 
+    ON o.product_id = p.product_id 
+WHERE o.order_date BETWEEN '2020-02-01' AND '2020-02-29'
+GROUP BY 
+  p.product_id,
+  p.product_name
+HAVING 
+  SUM(o.unit) >=100;
 ~~~
-💡배운 점 : 
-
 
 
 
 ### <문제 인증 캡쳐>
-(1) 특정 옵션이 포함된 자동차 리스트 구하기 
+(1) **특정 옵션이 포함된 자동차 리스트 구하기**
 ![alt text](<images/(WEEK7)SQL프로그래머스 문제/(1) 자동차.png>)
-(2) 오랜 기간 보호한 동물(1)
+(2) **오랜 기간 보호한 동물(1)**
 ![alt text](<images/(WEEK7)SQL프로그래머스 문제/(2) 동물.png>)
-(3) 있었는데요 없었습니다.
+(3) **있었는데요 없었습니다.**
 ![alt text](<images/(WEEK7)SQL프로그래머스 문제/(3) 있었는데.png>)
-(4) Combine Two Tables 
-
-(5) List the Products Ordered in a Period
-
+(4) **Combine Two Tables**
+![alt text](<images/(WEEK7)SQL프로그래머스 문제/(4) .png>)
+(5) **List the Products Ordered in a Period**
+![alt text](<images/(WEEK7)SQL프로그래머스 문제/(5).png>)
 
 
 ## 문제 1
@@ -519,11 +539,11 @@ SELECT
   od.UnitPrice
 FROM Users u
 JOIN Orders o
-  ON u.id = o.userId
+    ON u.id = o.userId
 JOIN OrderDetails od
-  ON o.OrderID = od.orderID
+    ON o.OrderID = od.orderID
 JOIN Products p
-  ON od.ProductID = p.ProductID
+    ON od.ProductID = p.ProductID
 WHERE u.region = 'Busan'
 ORDER BY o.OrderID;
 
